@@ -2,4 +2,3 @@ pandas
 streamlit
 datetime
 streamlit_echarts
-streamlit.components.v1
