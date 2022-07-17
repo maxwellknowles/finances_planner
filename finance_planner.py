@@ -162,12 +162,12 @@ with col2:
     ],}
 
     chart = st.selectbox("Select the visualizer you'd prefer...",("Pie Chart", "Area Chart", "Line Chart"))
-    if chart == "Area Chart":
+    if chart == 'Pie Chart':
+        st_echarts(options=options)
+    elif chart == "Area Chart":
         st.area_chart(cummulative)
     elif chart == 'Line Chart':
         st.line_chart(cummulative)
-    elif chart == 'Pie Chart':
-        st_echarts(options=options)
         
     l=[]
     for i in range(0,12):
