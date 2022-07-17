@@ -14,7 +14,7 @@ with col1:
     st.subheader("Income from Employment")
     datem = datetime.today().strftime("%b")
     today_month = datem
-    today_month_income = st.number_input("Enter your expected take home income for this month",0)
+    today_month_income = st.number_input("Enter your expected take-home income for this month",3000)
     months_numbers = [1,2,3,4,5,6,7,8,9,10,11,12]
     months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
     monthly_income = pd.DataFrame(
@@ -51,7 +51,7 @@ with col1:
     st.header("Expenses")
     #rent
     st.subheader("Room & Board")
-    today_month_rent = st.number_input("Enter your expected rent for this month",0)
+    today_month_rent = st.number_input("Enter your expected rent and food spend for this month",1000)
     #rent_modify = st.checkbox('Apply rent to all months? Remove check to modify individual months',1)
     l = []
 #if rent_modify:
@@ -80,7 +80,7 @@ with col1:
         st.write('car expenses $'+str(sum(months_rent)))
     #car
     st.subheader("Car")
-    today_month_car = st.number_input("Enter your total car expenses for this month",0)
+    today_month_car = st.number_input("Enter your total car expenses for this month",500)
     #car_modify = st.checkbox('Apply car expense to all months? Remove check to modify individual months',1)
     l = []
     #if car_modify:
@@ -109,7 +109,7 @@ with col1:
         st.write('car expenses: $'+str(sum(months_car)))
     #education
     st.subheader("Education")
-    today_month_edu = st.number_input("Enter your total educational cost for this month",0)
+    today_month_edu = st.number_input("Enter your total educational cost for this month",50)
     #edu_modify = st.checkbox('Apply educational expense to all months? Remove check to modify individual months',1)
     l = []
     #if edu_modify:
@@ -154,21 +154,17 @@ with col2:
         l.append(tup)
     cummulative = pd.DataFrame(l, columns=['month', 'income to date', 'rent and food expenses to date', 'car expenses to date', 'educational expenses to date', 'cash after expenses'])
     cummulative = cummulative.set_index('month')
-    st.metric(label="Projected Take Home Income & Cash After Expenses", value='$'+str(cummulative['income to date'][11]), delta='$'+str(cummulative['cash after expenses'][11]))
-
-    options = {"tooltip": {"formatter": "{a} <br/>{b} : ${c}"},
-    "series": [
-        {"data": [{"value": cummulative_income, "name": "Cummulative Income"}, {"value": cummulative_rent, "name": "Cummulative Rent & Food"}, {"value": cummulative_car, "name": "Cummulative Car Expenses"}, {"value": cummulative_edu, "name": "Cummulative Educational Expenses"}, {"value": cummulative_delta, "name": "Cummulative Extra Cash"}], "type": "pie"}
-    ],}
+    st.metric(label="Projected Take-Home Income & Cash After Expenses", value='$'+str(cummulative['income to date'][11]), delta='$'+str(cummulative['cash after expenses'][11]))
 
     chart = st.selectbox("Select the visualizer you'd prefer...",("Pie Chart", "Area Chart", "Line Chart"))
     if chart == 'Pie Chart':
+        options = {"tooltip": {"formatter": "{a} <br/>{b} : ${c}"},"series": [{"data": [{"value": cummulative_income, "name": "Cummulative Income"}, {"value": cummulative_rent, "name": "Cummulative Rent & Food"}, {"value": cummulative_car, "name": "Cummulative Car Expenses"}, {"value": cummulative_edu, "name": "Cummulative Educational Expenses"}, {"value": cummulative_delta, "name": "Cummulative Extra Cash"}], "type": "pie"}],}
         st_echarts(options=options)
     elif chart == "Area Chart":
         st.area_chart(cummulative)
     elif chart == 'Line Chart':
         st.line_chart(cummulative)
-        
+
     l=[]
     for i in range(0,12):
         month = monthly_income['month'][i]
