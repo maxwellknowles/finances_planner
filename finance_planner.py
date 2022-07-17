@@ -154,7 +154,20 @@ with col2:
     cummulative = pd.DataFrame(l, columns=['month', 'income to date', 'rent and food expenses to date', 'car expenses to date', 'educational expenses to date', 'cash after expenses'])
     cummulative = cummulative.set_index('month')
     st.metric(label="Projected Take Home Income & Cash After Expenses", value='$'+str(cummulative['income to date'][11]), delta='$'+str(cummulative['cash after expenses'][11]))
-    st.area_chart(cummulative)
+
+    options = {"tooltip": {"formatter": "{a} <br/>{b} : ${c}"},
+    "series": [
+        {"data": [{"value": cummulative_income, "name": "Cummulative Income"}, {"value": cummulative_rent, "name": "Cummulative Rent & Food"}, {"value": cummulative_car, "name": "Cummulative Car Expenses"}, {"value": cummulative_edu, "name": "Cummulative Educational Expenses"}, {"value": cummulative_delta, "name": "Cummulative Extra Cash"}], "type": "pie"}
+    ],}
+
+    chart = st.selectbox("Select the visualizer you'd prefer...",("Pie Chart", "Area Chart", "Line Chart"))
+    if chart == "Area Chart":
+        st.area_chart(cummulative)
+    elif chart == 'Line Chart':
+        st.line_chart(cummulative)
+    elif chart == 'Pie Chart':
+        st_echarts(options=options)
+        
     l=[]
     for i in range(0,12):
         month = monthly_income['month'][i]
@@ -171,4 +184,3 @@ with col2:
         l.append(tup)
     summary=pd.DataFrame(l, columns=['Month','Income','Rent & Food','Car Expenses','Educational Expenses','Extra Cash Available'])
     st.table(summary)
-    
