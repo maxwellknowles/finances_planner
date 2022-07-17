@@ -154,7 +154,7 @@ with col2:
         l.append(tup)
     cummulative = pd.DataFrame(l, columns=['month', 'income to date', 'rent and food expenses to date', 'car expenses to date', 'educational expenses to date', 'cash after expenses'])
     cummulative = cummulative.set_index('month')
-    st.metric(label="Projected Take-Home Income & Cash After Expenses", value='$'+str(cummulative['income to date'][11]), delta='$'+str(cummulative['cash after expenses'][11]))
+    st.metric(label="Projected Take-Home Income & Cash After Expenses", value='$'+str(cummulative_income), delta='$'+str(cummulative_delta))
 
     chart = st.selectbox("Select the visualizer you'd prefer...",("Pie Chart", "Area Chart", "Line Chart"))
     if chart == 'Pie Chart':
