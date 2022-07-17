@@ -3,6 +3,7 @@ import pandas as pd
 import streamlit as st
 from datetime import datetime
 from streamlit_echarts import st_echarts
+import streamlit.components.v1 as components
 
 #page configuration
 st.set_page_config(page_title="Maxwell Knowles Financial Planning Tool", page_icon=":dollar:", layout="wide",initial_sidebar_state="expanded")
