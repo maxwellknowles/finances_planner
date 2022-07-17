@@ -14,7 +14,7 @@ with col1:
     st.subheader("Income from Employment")
     datem = datetime.today().strftime("%b")
     today_month = datem
-    today_month_income = st.number_input("Enter your expected take-home income for this month",3000)
+    today_month_income = st.number_input("Enter your expected take-home income for this month",value=3000,min_value=0)
     months_numbers = [1,2,3,4,5,6,7,8,9,10,11,12]
     months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
     monthly_income = pd.DataFrame(
@@ -51,7 +51,7 @@ with col1:
     st.header("Expenses")
     #rent
     st.subheader("Room & Board")
-    today_month_rent = st.number_input("Enter your expected rent and food spend for this month",1000)
+    today_month_rent = st.number_input("Enter your expected rent and food spend for this month",value=1000,min_value=0)
     #rent_modify = st.checkbox('Apply rent to all months? Remove check to modify individual months',1)
     l = []
 #if rent_modify:
@@ -80,7 +80,7 @@ with col1:
         st.write('car expenses $'+str(sum(months_rent)))
     #car
     st.subheader("Car")
-    today_month_car = st.number_input("Enter your total car expenses for this month",500)
+    today_month_car = st.number_input("Enter your total car expenses for this month",value=700,min_value=0)
     #car_modify = st.checkbox('Apply car expense to all months? Remove check to modify individual months',1)
     l = []
     #if car_modify:
@@ -109,7 +109,7 @@ with col1:
         st.write('car expenses: $'+str(sum(months_car)))
     #education
     st.subheader("Education")
-    today_month_edu = st.number_input("Enter your total educational cost for this month",50)
+    today_month_edu = st.number_input("Enter your total educational cost for this month",value=100,min_value=0)
     #edu_modify = st.checkbox('Apply educational expense to all months? Remove check to modify individual months',1)
     l = []
     #if edu_modify:
