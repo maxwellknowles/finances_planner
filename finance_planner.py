@@ -31,10 +31,6 @@ with col1:
     st.write('income revenue: $'+str(sum(monthly_income['income'])))
 #if not income_modify:
     with st.expander('adjust income for individual months'):
-        @st.cache(allow_output_mutation=TRUE)
-        def load_incomes(jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec):
-            months_incomes = [jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec]
-            return (months_incomes)
         jan = st.number_input("Modify January income...", value=today_month_income)
         feb = st.number_input("Modify February income...", value=today_month_income)
         mar = st.number_input("Modify March income...", value=today_month_income)
