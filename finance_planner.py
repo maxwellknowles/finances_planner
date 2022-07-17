@@ -145,11 +145,11 @@ with col2:
     cummulative_edu = 0
     for i in range(0,len(monthly_income)):
         cummulative_month_number = monthly_income['month number'][i]
-        cummulative_income += monthly_income['income'][i]
-        cummulative_rent += monthly_income['rent'][i]
-        cummulative_car += monthly_income['car'][i]
-        cummulative_edu += monthly_income['edu'][i]
-        cummulative_delta = cummulative_income - (cummulative_rent + cummulative_car + cummulative_edu)
+        cummulative_income += int(monthly_income['income'][i])
+        cummulative_rent += int(monthly_income['rent'][i])
+        cummulative_car += int(monthly_income['car'][i])
+        cummulative_edu += int(monthly_income['edu'][i])
+        cummulative_delta = int(cummulative_income - (cummulative_rent + cummulative_car + cummulative_edu))
         tup = (cummulative_month_number, cummulative_income, cummulative_rent, cummulative_car, cummulative_edu, cummulative_delta)
         l.append(tup)
     cummulative = pd.DataFrame(l, columns=['month', 'income to date', 'rent and food expenses to date', 'car expenses to date', 'educational expenses to date', 'cash after expenses'])
