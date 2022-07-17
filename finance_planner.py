@@ -166,7 +166,7 @@ with col2:
         rent = '$'+str(monthly_income['rent'][i])
         car = '$'+str(monthly_income['car'][i])
         edu = '$'+str(monthly_income['edu'][i])
-        delta = income1 - (rent1+car1+edu1)
+        delta = '$'+str(income1 - (rent1+car1+edu1))
         tup = (month,income,rent,car,edu,delta)
         l.append(tup)
     summary=pd.DataFrame(l, columns=['Month','Income','Rent & Food','Car Expenses','Educational Expenses','Extra Cash Available'])
