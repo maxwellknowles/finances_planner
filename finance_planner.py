@@ -21,16 +21,13 @@ with col1:
         {'month': months,
         'month number':months_numbers,
         })
-    #income_modify = st.checkbox('Apply income to all months? Remove check to modify individual months',1)
     l = []
-#if income_modify:
     for i in range(0,len(monthly_income)):
         income = today_month_income
         tup = (income)
         l.append(tup)
     monthly_income['income']=l
     st.write('income revenue: $'+str(sum(monthly_income['income'])))
-#if not income_modify:
     with st.expander('adjust income for individual months'):
         jan = st.number_input("Modify January income...", value=today_month_income)
         feb = st.number_input("Modify February income...", value=today_month_income)
@@ -47,21 +44,31 @@ with col1:
         months_incomes = [jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec]
         monthly_income['income']=months_incomes
         st.write('job income: $'+str(sum(months_incomes)))
+    
+    #assets
+    st.header("Net Worth")
+    savings = st.number_input("Please enter your current savings balance...")
+    checking = st.number_input("Please enter your current checking balance...")
+    investments = st.number_input("Please enter your current investments total...", value=100)
+    #investments_add = st.number_input("Please enter your average monthly addition to your investments...", value=10)
+   # investments_growth = st.number_input("Please enter your estimated annual gain on your investments...",value=0.05)
+    #investment_add_rate = investments_add/investments
+   # monthly_gain = investments_growth/12
+    #invest = investments*(1+monthly_gain)**12
+    
     #expenses
     st.header("Expenses")
+    
     #rent
     st.subheader("Room & Board")
     today_month_rent = st.number_input("Enter your expected rent and food spend for this month",value=1000,min_value=0)
-    #rent_modify = st.checkbox('Apply rent to all months? Remove check to modify individual months',1)
     l = []
-#if rent_modify:
     for i in range(0,12):
         rent = today_month_rent
         tup = (rent)
         l.append(tup)
     monthly_income['rent']=l
     st.write('rent and food expenses: $'+str(sum(monthly_income['rent'])))
-#if not rent_modify:
     with st.expander('adjust rent and food for individual months'):
         jan = st.number_input("Modify January rent...", value=today_month_rent)
         feb = st.number_input("Modify February rent...", value=today_month_rent)
@@ -78,19 +85,17 @@ with col1:
         months_rent = [jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec]
         monthly_income['rent']=months_rent
         st.write('car expenses $'+str(sum(months_rent)))
+    
     #car
     st.subheader("Car")
     today_month_car = st.number_input("Enter your total car expenses for this month",value=700,min_value=0)
-    #car_modify = st.checkbox('Apply car expense to all months? Remove check to modify individual months',1)
     l = []
-    #if car_modify:
     for i in range(0,12):
         car = today_month_car
         tup = (car)
         l.append(tup)
     monthly_income['car']=l
     st.write('car expenses: $'+str(sum(monthly_income['car'])))
-    #if not car_modify:
     with st.expander('adjust car expenses for individual months'):
         jan = st.number_input("Modify January car...", value=today_month_car)
         feb = st.number_input("Modify February car...", value=today_month_car)
@@ -107,19 +112,17 @@ with col1:
         months_car = [jan, feb, mar, apr, may, jun, jul, aug, sep, oct, nov, dec]
         monthly_income['car']=months_car
         st.write('car expenses: $'+str(sum(months_car)))
+    
     #education
     st.subheader("Education")
     today_month_edu = st.number_input("Enter your total educational cost for this month",value=100,min_value=0)
-    #edu_modify = st.checkbox('Apply educational expense to all months? Remove check to modify individual months',1)
     l = []
-    #if edu_modify:
     for i in range(0,12):
         edu = today_month_edu
         tup = (edu)
         l.append(tup)
     monthly_income['edu']=l
     st.write('Educational expenses: $'+str(sum(monthly_income['edu'])))
-    #if not edu_modify:
     with st.expander('adjust educational expenses for individual months'):
         jan = st.number_input("Modify January education...", value=today_month_edu)
         feb = st.number_input("Modify February education...", value=today_month_edu)
@@ -143,6 +146,7 @@ with col2:
     cummulative_rent = 0
     cummulative_car = 0
     cummulative_edu = 0
+    cummulative_overage = 0
     for i in range(0,len(monthly_income)):
         cummulative_month_number = monthly_income['month number'][i]
         cummulative_income += int(monthly_income['income'][i])
@@ -150,15 +154,16 @@ with col2:
         cummulative_car += int(monthly_income['car'][i])
         cummulative_edu += int(monthly_income['edu'][i])
         cummulative_delta = int(cummulative_income - (cummulative_rent + cummulative_car + cummulative_edu))
-        tup = (cummulative_month_number, cummulative_income, cummulative_rent, cummulative_car, cummulative_edu, cummulative_delta)
+        cummulative_overage = checking + savings + investments + cummulative_delta
+        tup = (cummulative_month_number, cummulative_income, cummulative_rent, cummulative_car, cummulative_edu, cummulative_delta, cummulative_overage)
         l.append(tup)
-    cummulative = pd.DataFrame(l, columns=['month', 'income to date', 'rent and food expenses to date', 'car expenses to date', 'educational expenses to date', 'cash after expenses'])
+    cummulative = pd.DataFrame(l, columns=['month', 'income to date', 'rent and food expenses to date', 'car expenses to date', 'educational expenses to date', 'cash after expenses', 'total extra cash'])
     cummulative = cummulative.set_index('month')
-    st.metric(label="Projected Take-Home Income & Cash After Expenses", value='$'+str(cummulative_income), delta='$'+str(cummulative_delta))
+    st.metric(label="Projected Take-Home Income & Cash After Expenses", value='$'+str(cummulative['income to date'][11]), delta='$'+str(cummulative['cash after expenses'][11]))
 
     chart = st.selectbox("Select the visualizer you'd prefer...",("Pie Chart", "Area Chart", "Line Chart"))
     if chart == 'Pie Chart':
-        options = {"tooltip": {"formatter": "{a} <br/>{b} : ${c}"},"series": [{"data": [{"value": cummulative_income, "name": "Cummulative Income"}, {"value": cummulative_rent, "name": "Cummulative Rent & Food"}, {"value": cummulative_car, "name": "Cummulative Car Expenses"}, {"value": cummulative_edu, "name": "Cummulative Educational Expenses"}, {"value": cummulative_delta, "name": "Cummulative Extra Cash"}], "type": "pie"}],}
+        options = {"tooltip": {"formatter": "{a} <br/>{b} : ${c}"},"series": [{"data": [{"value": cummulative_income, "name": "Cummulative Income"}, {"value": cummulative_rent, "name": "Cummulative Rent & Food"}, {"value": cummulative_car, "name": "Cummulative Car Expenses"}, {"value": cummulative_edu, "name": "Cummulative Educational Expenses"}, {"value": cummulative_delta, "name": "Unspoken Cash"}], "type": "pie"}],}
         st_echarts(options=options)
     elif chart == "Area Chart":
         st.area_chart(cummulative)
@@ -166,18 +171,36 @@ with col2:
         st.line_chart(cummulative)
 
     l=[]
+    m=[]
+    cummulative_holdings1 = checking + savings + investments
     for i in range(0,12):
         month = monthly_income['month'][i]
         income1 = monthly_income['income'][i]
         rent1 = monthly_income['rent'][i]
         car1 = monthly_income['car'][i]
         edu1 = monthly_income['edu'][i]
+        delta1 = income1 - (rent1+car1+edu1)
+        cummulative_holdings1 = cummulative_holdings1 + delta1
         income = '$'+str(monthly_income['income'][i])
         rent = '$'+str(monthly_income['rent'][i])
         car = '$'+str(monthly_income['car'][i])
         edu = '$'+str(monthly_income['edu'][i])
         delta = '$'+str(income1 - (rent1+car1+edu1))
-        tup = (month,income,rent,car,edu,delta)
+        cummulative_holdings = '$'+str(cummulative_holdings1 + delta1)
+        tup = (month,income,rent,car,edu,delta,cummulative_holdings)
+        tup2 = (month,income1,rent1,car1,edu1,delta1,cummulative_holdings1)
         l.append(tup)
-    summary=pd.DataFrame(l, columns=['Month','Income','Rent & Food','Car Expenses','Educational Expenses','Extra Cash Available'])
+        m.append(tup2)
+    summary=pd.DataFrame(l, columns=['Month','Income','Rent & Food','Car Expenses','Educational Expenses','Extra Cash Available','Cummulative Holdings'])
+    download = pd.DataFrame(m, columns=['Month','Income','Rent & Food','Car Expenses','Educational Expenses','Extra Cash Available','Cummulative Holdings'])
+    summary = summary.set_index("Month")
     st.table(summary)
+
+    csv = summary.to_csv().encode('utf-8')
+    st.download_button(
+        label="Download data as CSV",
+        data=csv,
+        file_name='large_df.csv',
+        mime='text/csv',
+ )
+    
